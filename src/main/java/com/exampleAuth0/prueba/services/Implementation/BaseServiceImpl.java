@@ -1,0 +1,92 @@
+package com.exampleAuth0.prueba.services.Implementation;
+
+import com.exampleAuth0.prueba.entities.Base;
+import com.exampleAuth0.prueba.repositories.BaseRepository;
+import com.exampleAuth0.prueba.services.BaseService;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Optional;
+
+public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> implements BaseService<E,ID> {
+    protected BaseRepository<E, ID> repository;
+
+    public BaseServiceImpl(BaseRepository<E,ID> baseRepository){
+        this.repository = baseRepository;
+    }
+
+    @Override
+    @Transactional
+    public List<E> findAll() throws Exception {
+        try{
+            List<E> entities = repository.findAll();
+            return entities;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    @Transactional
+    public E findById(ID id) throws Exception {
+        try{
+            Optional<E> optional = repository.findById(id);
+            return optional.get();
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    @Transactional
+    public E save(E entity) throws Exception {
+        try{
+            entity = repository.save(entity);
+            return entity;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    @Transactional
+    public E update(E entity, ID id) throws Exception {
+        try{
+            /*Optional<E> optional = repository.findById(id);
+            E seller = optional.get();
+            seller = repository.save(entity);
+            repository.deleteById(id);
+            return seller;*/
+            if (repository.existsById(id))  {
+                entity.setId((Long) id);
+                repository.save(entity);
+            }
+           /* Optional<E> optional = repository.findById(id);
+            repository.
+            optional.get() = entity; */
+           /* seller = repository.save(entity);
+            repository.deleteById(id);*/
+            return entity;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+
+    @Override
+    @Transactional
+    public boolean delete(ID id) throws Exception {
+        try{
+            if(repository.existsById(id)) {
+                repository.deleteById(id);
+                return true;
+            }else{
+                throw new Exception();
+            }
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+}
