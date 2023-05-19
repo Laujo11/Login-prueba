@@ -1,5 +1,6 @@
-package com.exampleAuth0.prueba.configuration.security;
+package com.exampleAuth0.prueba.controller.configuration;
 
+import com.exampleAuth0.prueba.security.AudienceValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +31,6 @@ public class SecurityConfiguration {
 
     @Bean
     JwtDecoder jwtDecoder() {
-
         NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder)
                 JwtDecoders.fromOidcIssuerLocation(issuer);
 
